@@ -14,6 +14,16 @@ ROOT = Path(__file__).parent
 SITE = "https://otavioprocopio.github.io/great-cotw-one-site"
 DOWNLOAD = "https://github.com/OtavioProcopio/great-cotw-one-site/releases/latest"
 
+# Preencha antes de abrir a loja (aparecem na Privacidade e nos Termos).
+CONTROLLER = "Otávio Procópio"
+CONTACT_EMAIL = ""  # ex.: "suporte@seudominio.com.br"
+LICENSE_HOST = ""  # ex.: "Hetzner Online (Alemanha)"
+
+LEGAL_PATHS = {
+    "pt": {"privacy": "privacidade/", "terms": "termos/"},
+    "en": {"privacy": "en/privacy/", "terms": "en/terms/"},
+}
+
 T = {
     "pt": {
         "lang": "pt-BR",
@@ -331,8 +341,90 @@ def page(code: str) -> str:
 </section>
 </main>
 <footer>
+  <p class="links">{legal_links(code, "" if code == "pt" else "../")}</p>
   <p class="disc">{e(t['foot_disc'])}</p>
 </footer>
+</body>
+</html>
+"""
+
+
+def legal_links(code: str, root: str) -> str:
+    """Links do rodapé para Privacidade e Termos; `root` é o caminho até a raiz do site."""
+    paths = LEGAL_PATHS[code]
+    names = {"pt": ("Privacidade", "Termos de uso"), "en": ("Privacy", "Terms of use")}[code]
+    return f'<a href="{root}{paths["privacy"]}">{names[0]}</a> · <a href="{root}{paths["terms"]}">{names[1]}</a>'
+
+
+def fill(text: str, code: str) -> str:
+    """Troca os campos {controller}, {contact} e {host} pelos valores do topo do arquivo."""
+    contact = CONTACT_EMAIL or ("o e-mail de suporte publicado neste site" if code == "pt" else "the support e-mail published on this site")
+    host = LICENSE_HOST or ("a hospedagem do servidor, informada aqui quando a loja abrir" if code == "pt" else "the server host, listed here when the store opens")
+    return text.format(controller=CONTROLLER, contact=contact, host=host)
+
+
+def legal_page(code: str, kind: str) -> str:
+    """Página de Privacidade ou Termos, no mesmo visual do site."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("legal", ROOT / "legal.py")
+    assert spec and spec.loader
+    legal = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(legal)
+
+    sections = (legal.PRIVACY if kind == "privacy" else legal.TERMS)[code]
+    title = {
+        ("pt", "privacy"): "Política de Privacidade",
+        ("pt", "terms"): "Termos de Uso",
+        ("en", "privacy"): "Privacy Policy",
+        ("en", "terms"): "Terms of Use",
+    }[(code, kind)]
+    path = LEGAL_PATHS[code][kind]
+    base = "../" * path.count("/")
+    other_code = "en" if code == "pt" else "pt"
+    other_path = LEGAL_PATHS[other_code][kind]
+    updated = legal.UPDATED if code == "pt" else legal.UPDATED_EN
+    body = ""
+    for heading, parts in sections:
+        body += f"<h2>{e(heading)}</h2>"
+        for part in parts:
+            if isinstance(part, list):
+                body += "<ul>" + "".join(f"<li>{e(fill(x, code))}</li>" for x in part) + "</ul>"
+            else:
+                body += f"<p>{e(fill(part, code))}</p>"
+    home = base + ("" if code == "pt" else "en/")
+    back = "Voltar ao início" if code == "pt" else "Back to home"
+    stamp = ("Última atualização: " if code == "pt" else "Last updated: ") + updated
+    lang = "pt-BR" if code == "pt" else "en"
+    other_lang = "en" if code == "pt" else "pt-BR"
+    other_name = "English" if code == "pt" else "Português"
+    desc = f"{title} do Great COTW One." if code == "pt" else f"Great COTW One {title}."
+    return f"""<!doctype html>
+<html lang="{lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{e(title)} – Great COTW One</title>
+<meta name="description" content="{e(desc)}">
+<meta name="theme-color" content="#0b0f0c">
+<link rel="canonical" href="{SITE}/{path}">
+<link rel="alternate" hreflang="{lang}" href="{SITE}/{path}">
+<link rel="alternate" hreflang="{other_lang}" href="{SITE}/{other_path}">
+<link rel="icon" type="image/png" sizes="32x32" href="{base}assets/favicon-32.png">
+<link rel="stylesheet" href="{base}assets/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="{home}"><img src="{base}assets/icon-128.png" alt="" width="32" height="32"><span>Great COTW One</span></a>
+  <a class="lang" href="{base}{other_path}" hreflang="{other_lang}">{other_name}</a>
+</header>
+<main class="legal">
+  <h1>{e(title)}</h1>
+  {body}
+  <p class="note">{e(stamp)}</p>
+  <p><a href="{home}">{back}</a></p>
+</main>
+<footer><p class="links">{legal_links(code, base)}</p></footer>
 </body>
 </html>
 """
@@ -342,6 +434,10 @@ def main() -> None:
     (ROOT / "index.html").write_text(page("pt"), encoding="utf-8", newline="\n")
     (ROOT / "en").mkdir(exist_ok=True)
     (ROOT / "en" / "index.html").write_text(page("en"), encoding="utf-8", newline="\n")
+    for code, kinds in LEGAL_PATHS.items():
+        for kind, path in kinds.items():
+            (ROOT / path).mkdir(parents=True, exist_ok=True)
+            (ROOT / path / "index.html").write_text(legal_page(code, kind), encoding="utf-8", newline="\n")
     urls = [SITE + "/", SITE + "/en/"]
     sm = "".join(
         f'  <url><loc>{u}</loc><xhtml:link rel="alternate" hreflang="pt-BR" href="{SITE}/"/><xhtml:link rel="alternate" hreflang="en" href="{SITE}/en/"/></url>\n'
@@ -350,6 +446,7 @@ def main() -> None:
     (ROOT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + sm
+        + "".join(f"  <url><loc>{SITE}/{p}</loc></url>\n" for kinds in LEGAL_PATHS.values() for p in kinds.values())
         + "</urlset>\n",
         encoding="utf-8",
         newline="\n",

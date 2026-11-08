@@ -2,4 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>https://otavioprocopio.github.io/great-cotw-one-site/</loc><xhtml:link rel="alternate" hreflang="pt-BR" href="https://otavioprocopio.github.io/great-cotw-one-site/"/><xhtml:link rel="alternate" hreflang="en" href="https://otavioprocopio.github.io/great-cotw-one-site/en/"/></url>
   <url><loc>https://otavioprocopio.github.io/great-cotw-one-site/en/</loc><xhtml:link rel="alternate" hreflang="pt-BR" href="https://otavioprocopio.github.io/great-cotw-one-site/"/><xhtml:link rel="alternate" hreflang="en" href="https://otavioprocopio.github.io/great-cotw-one-site/en/"/></url>
+  <url><loc>https://otavioprocopio.github.io/great-cotw-one-site/privacidade/</loc></url>
+  <url><loc>https://otavioprocopio.github.io/great-cotw-one-site/termos/</loc></url>
+  <url><loc>https://otavioprocopio.github.io/great-cotw-one-site/en/privacy/</loc></url>
+  <url><loc>https://otavioprocopio.github.io/great-cotw-one-site/en/terms/</loc></url>
 </urlset>
