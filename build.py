@@ -231,7 +231,7 @@ def page(code: str) -> str:
             ],
         },
     ]
-    nav = "".join(f'<a href="{h}">{e(n)}</a>' for h, n in t["nav"])
+    nav = "".join(f'<a href="{h}">{e(n)}</a>' for h, n in t["nav"]) + guide_links(code, "" if code == "pt" else "../")
     ol, oname = t["other_lang"]
     feats = ""
     for i, (shot, title, text, alt) in enumerate(t["features"]):
@@ -342,12 +342,18 @@ def page(code: str) -> str:
 </section>
 </main>
 <footer>
-  <p class="links">{legal_links(code, "" if code == "pt" else "../")}</p>
+  <p class="links">{guide_links(code, "" if code == "pt" else "../", " · ")} · {legal_links(code, "" if code == "pt" else "../")}</p>
   <p class="disc">{e(t['foot_disc'])}</p>
 </footer>
 </body>
 </html>
 """
+
+
+def guide_links(code: str, root: str, sep: str = "") -> str:
+    """Links para o guia de animais e de reservas."""
+    items = {"pt": [("animais/", "Animais"), ("reservas/", "Reservas")], "en": [("en/animals/", "Animals"), ("en/reserves/", "Reserves")]}[code]
+    return sep.join(f'<a href="{root}{p}">{n}</a>' for p, n in items)
 
 
 def legal_links(code: str, root: str) -> str:
@@ -439,6 +445,13 @@ def main() -> None:
         for kind, path in kinds.items():
             (ROOT / path).mkdir(parents=True, exist_ok=True)
             (ROOT / path / "index.html").write_text(legal_page(code, kind), encoding="utf-8", newline="\n")
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("content", ROOT / "content.py")
+    assert spec and spec.loader
+    content = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(content)
+    guide_paths = content.build(SITE, DOWNLOAD, legal_links)
     urls = [SITE + "/", SITE + "/en/"]
     sm = "".join(
         f'  <url><loc>{u}</loc><xhtml:link rel="alternate" hreflang="pt-BR" href="{SITE}/"/><xhtml:link rel="alternate" hreflang="en" href="{SITE}/en/"/></url>\n'
@@ -447,6 +460,7 @@ def main() -> None:
     (ROOT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + sm
+        + "".join(f"  <url><loc>{SITE}/{p}</loc></url>\n" for p in guide_paths)
         + "".join(f"  <url><loc>{SITE}/{p}</loc></url>\n" for kinds in LEGAL_PATHS.values() for p in kinds.values())
         + "</urlset>\n",
         encoding="utf-8",

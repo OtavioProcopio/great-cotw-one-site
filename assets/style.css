@@ -137,3 +137,41 @@ footer a { color: var(--muted); }
 .legal ul { padding-left: 22px; }
 .legal li + li { margin-top: 6px; }
 footer .links { margin: 0 0 8px; }
+
+/* Guia de animais e reservas */
+.guide { max-width: 920px; margin: 0 auto; padding: 32px 16px 72px; }
+.guide h1 { font-size: clamp(30px, 5vw, 44px); margin: 12px 0 14px; }
+.guide h2 { font-size: 22px; margin: 40px 0 14px; }
+.guide .lead { color: #c7d3ca; font-size: 18px; max-width: 760px; margin: 0; text-align: left; }
+.guide .table-wrap { max-width: none; }
+.guide .note { text-align: left; }
+.crumbs { font-size: 14px; color: var(--muted); }
+.crumbs a { color: var(--muted); }
+.facts { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 8px; }
+.facts div { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 18px; min-width: 140px; }
+.facts span { display: block; color: var(--muted); font-size: 13px; }
+.facts strong { font-size: 22px; }
+.facts .go strong { color: var(--gold); }
+.chip { display: inline-grid; place-items: center; min-width: 28px; height: 28px; border-radius: 8px; font-weight: 700; font-size: 14px; background: var(--line); }
+.chip.c1, .chip.c2, .chip.c3 { background: #1f3a2a; color: #8ff0b7; }
+.chip.c4, .chip.c5, .chip.c6 { background: #3a361f; color: #f0dd8f; }
+.chip.c7, .chip.c8, .chip.c9 { background: #3a1f1f; color: #f0a28f; }
+.rar { font-size: 13px; padding: 2px 8px; border-radius: 999px; background: var(--line); white-space: nowrap; }
+.rar.r1 { background: #1f2f3a; color: #9fd0f0; }
+.rar.r2 { background: #2e1f3a; color: #cfa8f5; }
+.rar.r3 { background: #3a311f; color: var(--gold); }
+.go-tag { font-size: 11px; font-weight: 700; color: #04210f; background: var(--gold); border-radius: 6px; padding: 1px 5px; margin-left: 6px; vertical-align: middle; }
+table.narrow { max-width: 460px; }
+table.medals td { text-align: center; font-variant-numeric: tabular-nums; }
+.guide td { font-variant-numeric: tabular-nums; }
+.guide td.res { color: var(--muted); font-size: 14px; }
+.search { width: 100%; max-width: 420px; margin: 8px 0 18px; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font: inherit; }
+.res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+.res-card { display: block; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; color: var(--text); text-decoration: none; }
+.res-card:hover { border-color: var(--green); }
+.res-card h2 { font-size: 20px; margin: 0 0 4px; }
+.res-card .count { color: var(--green); font-size: 14px; margin: 0 0 8px; }
+.res-card p { color: var(--muted); font-size: 14px; margin: 0; }
+.cta-box { margin: 56px 0 0; padding: 28px; border-radius: var(--radius); background: linear-gradient(135deg, #12301f, #151d17); border: 1px solid var(--green-d); }
+.cta-box h2 { margin: 0 0 8px; }
+.cta-box p { color: #c7d3ca; }
