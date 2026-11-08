@@ -12,8 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 SITE = "https://otavioprocopio.github.io/great-cotw-one-site"
-DOWNLOAD = "https://github.com/OtavioProcopio/great-cotw-one/releases/latest"
-REPO = "https://github.com/OtavioProcopio/great-cotw-one"
+DOWNLOAD = "https://github.com/OtavioProcopio/great-cotw-one-site/releases/latest"
 
 T = {
     "pt": {
@@ -83,14 +82,13 @@ T = {
             ("Dá ban ou afeta o multiplayer?", "O app é só para single-player e não automatiza o jogo. Não use as edições em saves ligados a modos online."),
             ("Preciso de internet?", "Não. O app lê o seu save e o jogo instalado direto do computador. A licença Premium também é conferida sem internet."),
             ("Funciona com quais versões do jogo?", "Com o theHunter: Call of the Wild instalado pela Steam, no Windows 10 ou 11, e pelo menos uma partida salva. Os mapas de Askiy Ridge e Intisuyu ainda estão por confirmar."),
-            ("O Windows avisou que o programa não é seguro. E agora?", "O instalador ainda não tem assinatura digital paga, então o SmartScreen desconfia de qualquer programa novo. Clique em Mais informações e depois em Executar assim mesmo. O código é aberto e está no GitHub."),
+            ("O Windows avisou que o programa não é seguro. E agora?", "O instalador ainda não tem assinatura digital paga, então o SmartScreen desconfia de qualquer programa novo. Clique em Mais informações e depois em Executar assim mesmo."),
             ("Quais idiomas?", "Português, English e Español, escolhidos em Ajustes. Nomes de animais, missões e conquistas acompanham o idioma."),
             ("O que é grátis e o que é Premium?", "Tudo o que lê o seu jogo é grátis: mapa, animais, perfil, missões, equipamentos e backups. O Premium é o que grava: liberar zonas, editar animais e entregar itens."),
         ],
         "final_h": "Pronto para caçar com informação?",
         "final_p": "Baixe, abra e deixe o app achar o seu save sozinho. A instalação é só para o seu usuário e não pede senha de administrador.",
         "foot_disc": "Great COTW One é um projeto de fã, sem ligação com a Expansive Worlds nem com a Avalanche Studios. theHunter: Call of the Wild é marca dos seus donos. As imagens do app usam dados de exemplo.",
-        "foot_links": [(REPO, "Código no GitHub"), (REPO + "/blob/main/README.md", "Documentação")],
         "other_lang": ("en/", "English"),
         "other_hreflang": "en",
         "schema_desc": "Mapa de zonas, rastreador de grupos de animais, editor de save e montador de equipamento para theHunter: Call of the Wild.",
@@ -162,14 +160,13 @@ T = {
             ("Can it get me banned or affect multiplayer?", "The app is single-player only and does not automate the game. Do not use the edits on saves tied to online modes."),
             ("Do I need internet?", "No. The app reads your save and installed game straight from your computer. The Premium license is also checked offline."),
             ("Which game versions work?", "theHunter: Call of the Wild installed through Steam, on Windows 10 or 11, with at least one saved game. The Askiy Ridge and Intisuyu maps are still to be confirmed."),
-            ("Windows warned that the program is not safe. Now what?", "The installer does not have a paid digital signature yet, so SmartScreen distrusts any new program. Click More info and then Run anyway. The code is open source on GitHub."),
+            ("Windows warned that the program is not safe. Now what?", "The installer does not have a paid digital signature yet, so SmartScreen distrusts any new program. Click More info and then Run anyway."),
             ("Which languages?", "English, Português and Español, chosen in Settings. Animal, mission and achievement names follow the language."),
             ("What is free and what is Premium?", "Everything that reads your game is free: map, animals, profile, missions, equipment and backups. Premium is what writes: unlocking zones, editing animals and giving items."),
         ],
         "final_h": "Ready to hunt with information?",
         "final_p": "Download, open and let the app find your save on its own. Installation is per-user and needs no administrator password.",
         "foot_disc": "Great COTW One is a fan project, not affiliated with Expansive Worlds or Avalanche Studios. theHunter: Call of the Wild is a trademark of its owners. App images use sample data.",
-        "foot_links": [(REPO, "Code on GitHub"), (REPO + "/blob/main/README.en.md", "Documentation")],
         "other_lang": ("../", "Português"),
         "other_hreflang": "pt-BR",
         "schema_desc": "Zone map, animal group tracker, save editor and loadout builder for theHunter: Call of the Wild.",
@@ -237,7 +234,6 @@ def page(code: str) -> str:
     )
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in t["faq"])
     trust = "".join(f"<li>{CHECK}{e(x)}</li>" for x in t["trust"])
-    foot = " · ".join(f'<a href="{u}" rel="noopener">{e(n)}</a>' for u, n in t["foot_links"])
     return f"""<!doctype html>
 <html lang="{t['lang']}">
 <head>
@@ -335,7 +331,6 @@ def page(code: str) -> str:
 </section>
 </main>
 <footer>
-  <p>{foot}</p>
   <p class="disc">{e(t['foot_disc'])}</p>
 </footer>
 </body>
