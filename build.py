@@ -56,7 +56,7 @@ T = {
             ("Montador por animal", "Escolha a reserva e o animal. O app usa a classe de caça do animal e as classes que cada munição recomenda no próprio jogo e sugere o melhor do seu arsenal, mais o que vale comprar."),
             ("Conjuntos salvos", "Veja os seus loadouts, qual está ativo e quais itens faltam em cada um."),
         ],
-        "eq_shots": [("equipamentos-advisor", "Montador de equipamento para o alce, com arma, munição e mira"), ("equipamentos-ranking", "Ranking pessoal das armas")],
+        "eq_shots": [("equipamentos-advisor", "O que levar para o alce: arma, munição e mira"), ("equipamentos-kit", "Kit para a reserva inteira com iscas, extras e peso total")],
         "eq_note": "As telas usam dados de exemplo. No app você vê o seu arsenal e os ícones do seu jogo.",
         "safe_h": "Seguro por design",
         "safe_sub": "Mexer em save dá medo. Por isso cada regra abaixo é testada e vale para tudo o que o app grava.",
@@ -134,7 +134,7 @@ T = {
             ("Loadout builder per animal", "Pick the reserve and the animal. The app uses the animal's hunting class and the classes each ammo recommends in the game itself, and suggests the best from your arsenal plus what is worth buying."),
             ("Saved loadouts", "See your loadouts, which one is active and what items are missing in each."),
         ],
-        "eq_shots": [("equipamentos-advisor", "Loadout builder for the moose with weapon, ammo and scope"), ("equipamentos-ranking", "Personal weapon ranking")],
+        "eq_shots": [("equipamentos-advisor", "What to bring for the moose: weapon, ammo and scope"), ("equipamentos-kit", "Whole-reserve kit with lures, extras and total weight")],
         "eq_note": "Screens use sample data. In the app you see your own arsenal and your game's icons.",
         "safe_h": "Safe by design",
         "safe_sub": "Touching a save is scary. So every rule below is tested and applies to everything the app writes.",
@@ -201,6 +201,7 @@ def img(base: str, name: str, alt: str, eager: bool = False, w: int = 1920, h: i
 def page(code: str) -> str:
     t = T[code]
     base = "" if code == "pt" else "../"
+    prefix = "" if code == "pt" else "en/"  # prints no idioma da página
     url = SITE + t["path"]
     other_url = SITE + ("/en/" if code == "pt" else "/")
     ids = [n[0][1:] for n in t["nav"]]
@@ -235,9 +236,9 @@ def page(code: str) -> str:
     feats = ""
     for i, (shot, title, text, alt) in enumerate(t["features"]):
         flip = " flip" if i % 2 else ""
-        feats += f'<article class="feat{flip}"><div class="feat-text"><h3>{e(title)}</h3><p>{e(text)}</p></div><figure class="shot">{img(base, shot, alt)}</figure></article>'
+        feats += f'<article class="feat{flip}"><div class="feat-text"><h3>{e(title)}</h3><p>{e(text)}</p></div><figure class="shot">{img(base, prefix + shot, alt)}</figure></article>'
     points = "".join(f"<li><h3>{e(a)}</h3><p>{e(b)}</p></li>" for a, b in t["eq_points"])
-    shots = "".join(f'<figure class="shot">{img(base, s, a)}</figure>' for s, a in t["eq_shots"])
+    shots = "".join(f'<figure class="shot">{img(base, prefix + s, a)}</figure>' for s, a in t["eq_shots"])
     safe = "".join(f"<li>{CHECK}<div><h3>{e(a)}</h3><p>{e(b)}</p></div></li>" for a, b in t["safe"])
     rows = "".join(
         f'<tr><th scope="row">{e(n)}</th><td>{CHECK if f else DASH}</td><td>{CHECK if p else DASH}</td></tr>' for n, f, p in t["rows"]
@@ -292,7 +293,7 @@ def page(code: str) -> str:
     <a class="btn ghost" href="#{ids[0]}">{e(t['cta2'])}</a>
   </div>
   <ul class="trust">{trust}</ul>
-  <figure class="hero-shot">{img(base, 'mapa', t['hero_alt'], eager=True)}</figure>
+  <figure class="hero-shot">{img(base, prefix + 'mapa', t['hero_alt'], eager=True)}</figure>
 </section>
 
 <section id="{ids[0]}" class="block">
